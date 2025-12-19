@@ -1,0 +1,255 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Zap, 
+  Keyboard,
+  Rocket,
+  Search,
+  Download,
+  Star,
+  Sparkles,
+  MousePointer2,
+  ExternalLink,
+  MessageCircle,
+  Heart,
+  ArrowRight,
+  ShieldCheck,
+  Globe
+} from 'lucide-react';
+
+// --- 通用组件 ---
+const Button = ({ children, variant = 'primary', className = '', ...props }) => {
+  const baseStyles = "px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-95 text-lg";
+  const variants = {
+    primary: "bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600",
+    secondary: "bg-indigo-600 text-white hover:bg-indigo-700",
+    outline: "bg-white text-gray-700 border-2 border-gray-100 hover:border-pink-200 hover:bg-pink-50"
+  };
+  
+  return (
+    <button className={`${baseStyles} ${variants[variant]} ${className}`} {...props}>
+      {children}
+    </button>
+  );
+};
+
+export default function App() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const aiModels = [
+    { name: '豆包', color: 'bg-blue-400', desc: '超亲切的超能力' },
+    { name: 'Kimi', color: 'bg-stone-700', desc: '读长文章超厉害' },
+    { name: '元宝', color: 'bg-orange-400', desc: '腾讯家的高才生' },
+    { name: '文心', color: 'bg-blue-600', desc: '知识面超级广' },
+    { name: '通义', color: 'bg-purple-500', desc: '聪明的小助手' },
+    { name: '秘塔', color: 'bg-teal-500', desc: '专业搜索不废话' },
+    { name: '智谱', color: 'bg-indigo-500', desc: '清华学霸基因' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FFFDFE] font-sans text-gray-800 selection:bg-pink-100">
+      {/* 顶部导航 */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-white/80 backdrop-blur-xl shadow-sm h-16' : 'bg-transparent h-20'}`}>
+        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg shadow-pink-200">
+              <Zap className="text-white w-6 h-6 fill-current" />
+            </div>
+            <span className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-indigo-600">
+              Cursor助手
+            </span>
+          </div>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#how" className="text-sm font-bold text-gray-500 hover:text-pink-500 transition-colors">怎么玩？</a>
+            <Button variant="primary" className="py-2 px-6 text-sm">点击下载</Button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero 介绍区 */}
+      <section className="pt-32 pb-20 px-6 text-center">
+        <div className="max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-pink-50 text-pink-600 text-sm font-extrabold mb-8 animate-bounce">
+            <Sparkles size={16} />
+            <span>不用选！我全都要！</span>
+          </div>
+          <h1 className="text-5xl lg:text-7xl font-black tracking-tight mb-8 leading-[1.1]">
+            全网 AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">一键召唤</span> <br />
+            你的超级搜索外挂
+          </h1>
+          <p className="text-xl text-gray-500 mb-10 leading-relaxed font-medium">
+            还在一个一个打开网页搜 AI？太累啦！<br />
+            按一下手指，7大顶尖 AI 瞬间集体出动，为你出谋划策。
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button variant="primary">
+              <Download size={20} /> 立即免费下载 (Windows)
+            </Button>
+            <Button variant="outline">
+              <MessageCircle size={20} /> 加入吹水群
+            </Button>
+          </div>
+          <p className="mt-6 text-xs text-gray-400 flex items-center justify-center gap-2">
+            <ShieldCheck size={14} /> 纯净脚本，无后台，无病毒，放心冲
+          </p>
+        </div>
+      </section>
+
+      {/* 动画演示区 */}
+      <section id="how" className="py-20 bg-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            
+            {/* 左侧说明 */}
+            <div className="space-y-8 text-left">
+              <div className="space-y-4">
+                <h2 className="text-4xl font-black text-gray-900 leading-tight">
+                  像“开挂”一样简单 <br />
+                  只需 <span className="text-pink-500">两步</span>
+                </h2>
+                <div className="space-y-6 pt-4">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black shrink-0">1</div>
+                    <div>
+                      <h4 className="text-lg font-bold">按住 CapsLock + F</h4>
+                      <p className="text-gray-500">不用管那个大小写灯，长按就对了！</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center font-black shrink-0">2</div>
+                    <div>
+                      <h4 className="text-lg font-bold">输入你想问的，敲回车！</h4>
+                      <p className="text-gray-500">哪怕是“今天中午吃什么”，都能让 7 个 AI 帮你选。</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 bg-gradient-to-br from-indigo-50 to-pink-50 rounded-[2rem] border border-white">
+                <h4 className="text-sm font-black text-indigo-900 mb-2 flex items-center gap-2">
+                  <Heart className="fill-current text-pink-500" size={16} /> 为什么一定要用它？
+                </h4>
+                <ul className="text-sm text-indigo-800/70 space-y-2 font-medium">
+                  <li>• 豆包最新，Kimi 最懂，通义最快...</li>
+                  <li>• 以前要开 7 次网页，现在只需 1 秒钟。</li>
+                  <li>• 找资料、写作业、查攻略，效率直接起飞！</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* 右侧模拟器 */}
+            <div className="relative">
+              <div className="absolute -inset-10 bg-gradient-to-tr from-pink-500/20 to-indigo-500/20 blur-[100px] rounded-full"></div>
+              <div className="relative bg-gray-900 rounded-[3rem] p-3 shadow-2xl border-4 border-white shadow-pink-100">
+                <div className="h-[450px] w-full bg-[#0d1117] rounded-[2.5rem] relative overflow-hidden flex flex-col">
+                   {/* 模拟浏览器头部 */}
+                   <div className="px-6 py-4 border-b border-white/5 bg-white/5 flex items-center gap-3">
+                      <div className="flex gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+                      </div>
+                      <div className="bg-white/10 px-4 py-1.5 rounded-full text-[10px] text-gray-400 font-mono flex-1 text-center">
+                        AI_SUPER_SEARCH.exe
+                      </div>
+                   </div>
+
+                   {/* 搜索框弹出 */}
+                   <div className="p-8">
+                      <div className="w-full bg-indigo-600/20 border-2 border-indigo-400 rounded-2xl p-4 flex items-center gap-4 animate-fade-in shadow-[0_0_30px_rgba(129,140,248,0.3)]">
+                        <Search className="text-indigo-400" />
+                        <span className="text-white font-bold text-lg animate-typing overflow-hidden whitespace-nowrap border-r-2 border-white">
+                          如何评价《黑神话：悟空》？
+                        </span>
+                      </div>
+                   </div>
+
+                   {/* 窗口弹出的视觉效果 */}
+                   <div className="relative flex-1 px-8">
+                      {aiModels.map((ai, i) => (
+                        <div 
+                          key={ai.name}
+                          style={{ 
+                            left: `${20 + i * 20}px`, 
+                            top: `${10 + i * 20}px`,
+                            animationDelay: `${i * 0.15}s`
+                          }}
+                          className={`absolute w-40 h-28 ${ai.color} rounded-2xl border-2 border-white/20 shadow-2xl animate-cascade flex flex-col overflow-hidden`}
+                        >
+                          <div className="px-3 py-2 bg-black/20 flex justify-between items-center">
+                            <span className="text-[10px] text-white font-black">{ai.name}</span>
+                            <ExternalLink size={10} className="text-white/50" />
+                          </div>
+                          <div className="p-3">
+                            <div className="h-2 w-full bg-white/40 rounded-full mb-2"></div>
+                            <div className="h-2 w-2/3 bg-white/20 rounded-full"></div>
+                            <div className="mt-3 text-[8px] text-white/80 font-bold">{ai.desc}</div>
+                          </div>
+                        </div>
+                      ))}
+                   </div>
+
+                   {/* 底部提示 */}
+                   <div className="mt-auto p-4 text-center bg-indigo-500/10">
+                      <p className="text-[10px] text-indigo-300 font-black tracking-widest uppercase">
+                        🚀 7台引擎已全部就绪
+                      </p>
+                   </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 底部安利 */}
+      <section className="py-20 text-center px-6">
+        <div className="max-w-2xl mx-auto space-y-8">
+          <h2 className="text-3xl font-black italic">“用过就再也回不去的功能”</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {['不用钱', '没广告', '体积小', '超安全'].map(tag => (
+              <div key={tag} className="py-3 px-4 bg-white border-2 border-pink-50 rounded-2xl text-pink-500 font-bold shadow-sm">
+                #{tag}
+              </div>
+            ))}
+          </div>
+          <div className="pt-8">
+            <Button variant="primary" className="mx-auto w-full max-w-sm py-5 text-xl">
+               获取安装包，开启新世界 <ArrowRight />
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <style>{`
+        @keyframes cascade {
+          0% { opacity: 0; transform: scale(0.5) translateY(40px) rotate(-10deg); }
+          100% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+        }
+        @keyframes typing {
+          from { width: 0 }
+          to { width: 100% }
+        }
+        @keyframes fade-in {
+          from { opacity: 0; transform: scale(0.9); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        .animate-cascade {
+          animation: cascade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .animate-typing {
+          animation: typing 1.5s steps(25, end) infinite;
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out forwards;
+        }
+      `}</style>
+    </div>
+  );
+}
