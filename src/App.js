@@ -7,9 +7,8 @@ import {
 
 /**
  * 故障诊断：
- * 1. 为什么不能切换？因为 Tailwind 默认不监听 .dark 类名。
- * 2. 解决方案：在 HTML 中注入 tailwind.config = { darkMode: 'class' }。
- * 3. 本脚本已增强了对 DOM 的直接控制。
+ * 1. 修复了对象属性中直接放置 JSX 导致的解析错误。
+ * 2. 优化了图标渲染逻辑：存储组件引用而非实例。
  */
 
 const content = {
@@ -38,11 +37,11 @@ const content = {
     demoStep2: "输入你想问的，敲回车！",
     demoBadge: "不用选！我全都要！",
     keys: [
-      { id: 'F', name: '全网 AI 闪电搜', hotkey: 'CapsLock + F', desc: '一次输入，瞬间打开豆包、Kimi、秘塔等 7+ 顶尖 AI。拒绝选择困难，横向对比才是王道。', icon: <Search className="text-pink-500" />, color: 'bg-pink-50', darkColor: 'dark:bg-pink-900/20' },
-      { id: 'S', name: '窗口一键分屏', hotkey: 'CapsLock + S', desc: '写代码时想看文档？一键让当前窗口左/右对齐。别再手动拖窗体了，姿势要优雅。', icon: <Layout className="text-blue-500" />, color: 'bg-blue-50', darkColor: 'dark:bg-blue-900/20' },
-      { id: 'B', name: '批量指令执行', hotkey: 'CapsLock + B', desc: '重复的操作交给机器。一键启动预设的批量任务，让你的电脑像电影黑客一样自动运转。', icon: <Layers className="text-purple-500" />, color: 'bg-purple-50', darkColor: 'dark:bg-purple-900/20' },
-      { id: 'C', name: '偏好快速设置', hotkey: 'CapsLock + C', desc: '随时唤起配置面板，微调你的专属快捷键，它会越来越懂你的习惯。', icon: <Settings className="text-orange-500" />, color: 'bg-orange-50', darkColor: 'dark:bg-orange-900/20' },
-      { id: 'Esc', name: '面板闪电退出', hotkey: 'CapsLock + Esc', desc: '优雅地来，优雅地走。不管开了多少辅助窗口，按一下，世界立刻恢复清净。', icon: <XCircle className="text-rose-500" />, color: 'bg-rose-50', darkColor: 'dark:bg-rose-900/20' }
+      { id: 'F', name: '全网 AI 闪电搜', hotkey: 'CapsLock + F', desc: '一次输入，瞬间打开豆包、Kimi、秘塔等 7+ 顶尖 AI。拒绝选择困难，横向对比才是王道。', Icon: Search, iconColor: 'text-pink-500', color: 'bg-pink-50', darkColor: 'dark:bg-pink-900/20' },
+      { id: 'S', name: '窗口一键分屏', hotkey: 'CapsLock + S', desc: '写代码时想看文档？一键让当前窗口左/右对齐。别再手动拖窗体了，姿势要优雅。', Icon: Layout, iconColor: 'text-blue-500', color: 'bg-blue-50', darkColor: 'dark:bg-blue-900/20' },
+      { id: 'B', name: '批量指令执行', hotkey: 'CapsLock + B', desc: '重复的操作交给机器。一键启动预设的批量任务，让你的电脑像电影黑客一样自动运转。', Icon: Layers, iconColor: 'text-purple-500', color: 'bg-purple-50', darkColor: 'dark:bg-purple-900/20' },
+      { id: 'C', name: '偏好快速设置', hotkey: 'CapsLock + C', desc: '随时唤起配置面板，微调你的专属快捷键，它会越来越懂你的习惯。', Icon: Settings, iconColor: 'text-orange-500', color: 'bg-orange-50', darkColor: 'dark:bg-orange-900/20' },
+      { id: 'Esc', name: '面板闪电退出', hotkey: 'CapsLock + Esc', desc: '优雅地来，优雅地走。不管开了多少辅助窗口，按一下，世界立刻恢复清净。', Icon: XCircle, iconColor: 'text-rose-500', color: 'bg-rose-50', darkColor: 'dark:bg-rose-900/20' }
     ]
   },
   en: {
@@ -70,11 +69,11 @@ const content = {
     demoStep2: "Type & Hit Enter!",
     demoBadge: "Compare all at once",
     keys: [
-      { id: 'F', name: 'AI Multi-Search', hotkey: 'CapsLock + F', desc: 'One input, instantly open Doubao, Kimi, Metaso, and 7+ top AI search pages. No more hesitation.', icon: <Search className="text-pink-500" />, color: 'bg-pink-50', darkColor: 'dark:bg-pink-900/20' },
-      { id: 'S', name: 'Smart Split Screen', hotkey: 'CapsLock + S', desc: 'Align windows left/right instantly. Stop dragging windows manually; keep it professional.', icon: <Layout className="text-blue-500" />, color: 'bg-blue-50', darkColor: 'dark:bg-blue-900/20' },
-      { id: 'B', name: 'Batch Command', hotkey: 'CapsLock + B', desc: 'Leave repetitive tasks to the machine. Launch preset batch tasks with one single click.', icon: <Layers className="text-purple-500" />, color: 'bg-purple-50', darkColor: 'dark:bg-purple-900/20' },
-      { id: 'C', name: 'Quick Config', hotkey: 'CapsLock + C', desc: 'Summon the config panel anytime to fine-tune your exclusive hotkeys and habits.', icon: <Settings className="text-orange-500" />, color: 'bg-orange-50', darkColor: 'dark:bg-orange-900/20' },
-      { id: 'Esc', name: 'Lightning Exit', hotkey: 'CapsLock + Esc', desc: 'Close all helper panels instantly. One key to restore your clean desktop workspace.', icon: <XCircle className="text-rose-500" />, color: 'bg-rose-50', darkColor: 'dark:bg-rose-900/20' }
+      { id: 'F', name: 'AI Multi-Search', hotkey: 'CapsLock + F', desc: 'One input, instantly open Doubao, Kimi, Metaso, and 7+ top AI search pages. No more hesitation.', Icon: Search, iconColor: 'text-pink-500', color: 'bg-pink-50', darkColor: 'dark:bg-pink-900/20' },
+      { id: 'S', name: 'Smart Split Screen', hotkey: 'CapsLock + S', desc: 'Align windows left/right instantly. Stop dragging windows manually; keep it professional.', Icon: Layout, iconColor: 'text-blue-500', color: 'bg-blue-50', darkColor: 'dark:bg-blue-900/20' },
+      { id: 'B', name: 'Batch Command', hotkey: 'CapsLock + B', desc: 'Leave repetitive tasks to the machine. Launch preset batch tasks with one single click.', Icon: Layers, iconColor: 'text-purple-500', color: 'bg-purple-50', darkColor: 'dark:bg-purple-900/20' },
+      { id: 'C', name: 'Quick Config', hotkey: 'CapsLock + C', desc: 'Summon the config panel anytime to fine-tune your exclusive hotkeys and habits.', Icon: Settings, iconColor: 'text-orange-500', color: 'bg-orange-50', darkColor: 'dark:bg-orange-900/20' },
+      { id: 'Esc', name: 'Lightning Exit', hotkey: 'CapsLock + Esc', desc: 'Close all helper panels instantly. One key to restore your clean desktop workspace.', Icon: XCircle, iconColor: 'text-rose-500', color: 'bg-rose-50', darkColor: 'dark:bg-rose-900/20' }
     ]
   }
 };
@@ -255,16 +254,21 @@ export default function App() {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-black text-center mb-16">{t.sectionTitle}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {t.keys.map((key) => (
-              <div key={key.id} className="group p-8 bg-white dark:bg-gray-900 rounded-[2.5rem] border-2 border-transparent hover:border-pink-200 dark:hover:border-pink-900 transition-all duration-500 shadow-sm hover:shadow-2xl">
-                <div className={`w-14 h-14 ${key.color} ${key.darkColor} rounded-2xl flex items-center justify-center mb-6`}>{key.icon}</div>
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xl font-black">{key.name}</h3>
-                  <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-[10px] rounded font-bold text-gray-400">{key.hotkey}</kbd>
+            {t.keys.map((key) => {
+              const IconComponent = key.Icon; // 取得图标组件引用
+              return (
+                <div key={key.id} className="group p-8 bg-white dark:bg-gray-900 rounded-[2.5rem] border-2 border-transparent hover:border-pink-200 dark:hover:border-pink-900 transition-all duration-500 shadow-sm hover:shadow-2xl">
+                  <div className={`w-14 h-14 ${key.color} ${key.darkColor} rounded-2xl flex items-center justify-center mb-6`}>
+                    <IconComponent className={key.iconColor} size={24} />
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xl font-black">{key.name}</h3>
+                    <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-[10px] rounded font-bold text-gray-400">{key.hotkey}</kbd>
+                  </div>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{key.desc}</p>
                 </div>
-                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{key.desc}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
