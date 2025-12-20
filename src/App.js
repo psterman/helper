@@ -5,17 +5,31 @@ import {
   Settings, XCircle, Languages, Rocket
 } from 'lucide-react';
 
+/**
+ * 故障诊断：
+ * 1. 为什么不能切换？因为 Tailwind 默认不监听 .dark 类名。
+ * 2. 解决方案：在 HTML 中注入 tailwind.config = { darkMode: 'class' }。
+ * 3. 本脚本已增强了对 DOM 的直接控制。
+ */
 
 const content = {
   zh: {
     nav: ['玩法介绍', '立即下载'],
-    heroTitle: <>全网 AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">一键召唤</span></>,
+    heroTitle: (
+      <>
+        全网 AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">一键召唤</span>
+      </>
+    ),
     heroSubtitle: "你的超级搜索外挂",
     heroDesc: "还在一个一个打开网页搜 AI？太累啦！按一下手指，7大顶尖 AI 瞬间集体出动，为你出谋划策。",
     downloadBtn: "立即免费下载 (Windows)",
     communityBtn: "加入吹水群",
     safetyNote: "纯净脚本，无后台，无病毒，放心冲",
-    sectionTitle: <>懂你的 <span className="text-pink-500">五大招式</span></>,
+    sectionTitle: (
+      <>
+        懂你的 <span className="text-pink-500">五大招式</span>
+      </>
+    ),
     backTitle: "“一旦习惯，就再也回不去”",
     tags: ['提升效率', '优雅操作', '完全免费', '轻量纯净'],
     footerBtn: "获取安装包，开启新世界",
@@ -33,13 +47,21 @@ const content = {
   },
   en: {
     nav: ['Features', 'Download'],
-    heroTitle: <>Summon All AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">In One Click</span></>,
+    heroTitle: (
+      <>
+        Summon All AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">In One Click</span>
+      </>
+    ),
     heroSubtitle: "Your Ultimate Search Power-up",
     heroDesc: "Tired of searching AI models one by one? Press a key, and 7+ top AI models will launch instantly to solve your problems.",
     downloadBtn: "Download for Free (Windows)",
     communityBtn: "Join Community",
     safetyNote: "Pure script, no background process, virus-free, safe to use",
-    sectionTitle: <>The <span className="text-pink-500">Big 5 Features</span></>,
+    sectionTitle: (
+      <>
+        The <span className="text-pink-500">Big 5 Features</span>
+      </>
+    ),
     backTitle: "Once you use it, you'll never go back",
     tags: ['Fast', 'Elegant', 'Free', 'Clean'],
     footerBtn: "Get Installer & Start Now",
@@ -83,7 +105,6 @@ export default function App() {
   const [lang, setLang] = useState('zh');
   const t = content[lang];
 
-  // 1. 确保在组件挂载时，如果 HTML 没有配置过 Tailwind，我们通过 JS 补救一下配置
   useEffect(() => {
     if (window.tailwind) {
       window.tailwind.config = {
@@ -91,7 +112,6 @@ export default function App() {
       };
     }
     
-    // 初始化时检测系统偏好
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     setDarkMode(isDark);
     
@@ -100,7 +120,6 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 2. 当 darkMode 状态改变时，实时修改 html 标签的 class
   useEffect(() => {
     const root = window.document.documentElement;
     if (darkMode) {
@@ -256,7 +275,7 @@ export default function App() {
           <h2 className="text-4xl font-black italic">“{t.backTitle}”</h2>
           <div className="flex flex-wrap justify-center gap-4">
             {t.tags.map(tag => (
-              <div key={tag} className="py-3 px-6 bg-white dark:bg-gray-800 border-2 border-pink-50 dark:border-pink-900/30 rounded-2xl text-pink-500 dark:text-pink-400 font-bold">#{tag}</div>
+              <div key={tag} className="py-3 px-6 bg-white dark:bg-gray-900 border-2 border-pink-50 dark:border-pink-900/30 rounded-2xl text-pink-500 dark:text-pink-400 font-bold">#{tag}</div>
             ))}
           </div>
           <Button variant="primary" className="mx-auto w-full max-w-md py-6 text-xl">
