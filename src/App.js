@@ -5,7 +5,13 @@ import {
   Settings, XCircle, Languages, Rocket
 } from 'lucide-react';
 
-// --- Language Data ---
+/**
+ * 故障诊断：
+ * 1. 为什么不能切换？因为 Tailwind 默认不监听 .dark 类名。
+ * 2. 解决方案：在 HTML 中注入 tailwind.config = { darkMode: 'class' }。
+ * 3. 本脚本已增强了对 DOM 的直接控制。
+ */
+
 const content = {
   zh: {
     nav: ['玩法介绍', '立即下载'],
@@ -83,23 +89,32 @@ export default function App() {
   const [lang, setLang] = useState('zh');
   const t = content[lang];
 
-  // 关键修复：直接控制 html 标签的 class
+  // 1. 确保在组件挂载时，如果 HTML 没有配置过 Tailwind，我们通过 JS 补救一下配置
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    if (window.tailwind) {
+      window.tailwind.config = {
+        darkMode: 'class',
+      };
     }
-  }, [darkMode]);
-
-  useEffect(() => {
+    
+    // 初始化时检测系统偏好
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setDarkMode(isDark);
+    
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setDarkMode(true);
-    }
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // 2. 当 darkMode 状态改变时，实时修改 html 标签的 class
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (darkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   return (
     <div className="min-h-screen bg-[#FFFDFE] dark:bg-gray-950 font-sans text-gray-800 dark:text-gray-200 transition-colors duration-500">
@@ -121,7 +136,7 @@ export default function App() {
               <Languages size={20} className="text-gray-500" />
               <span className="text-xs font-bold text-gray-400 uppercase">{lang === 'zh' ? 'EN' : '中文'}</span>
             </button>
-            <button onClick={() => setDarkMode(!darkMode)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+            <button onClick={() => setDarkMode(!darkMode)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none">
               {darkMode ? <Sun className="text-yellow-400" /> : <Moon className="text-indigo-600" />}
             </button>
             <Button variant="primary" className="hidden md:flex py-2 px-6 text-sm">
@@ -237,10 +252,6 @@ export default function App() {
                 <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{key.desc}</p>
               </div>
             ))}
-            <div className="lg:col-span-1 p-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-[2.5rem] flex flex-col justify-center text-white relative overflow-hidden shadow-xl">
-              <h3 className="text-2xl font-black mb-4 z-10">{lang === 'zh' ? '更快，更优雅' : 'Faster, Smarter'}</h3>
-              <Rocket size={120} className="absolute -right-4 -bottom-4 opacity-20 rotate-12" />
-            </div>
           </div>
         </div>
       </section>
