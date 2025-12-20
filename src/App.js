@@ -1,28 +1,174 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Zap, 
-  Keyboard,
+  Search, 
+  Download, 
+  Sparkles, 
+  ExternalLink, 
+  MessageCircle, 
+  Heart, 
+  ArrowRight, 
+  ShieldCheck, 
+  Sun, 
+  Moon, 
+  Layout, 
+  Layers, 
+  Settings, 
+  XCircle, 
+  Languages,
   Rocket,
-  Search,
-  Download,
-  Star,
-  Sparkles,
-  MousePointer2,
-  ExternalLink,
-  MessageCircle,
-  Heart,
-  ArrowRight,
-  ShieldCheck,
   Globe
 } from 'lucide-react';
 
-// --- 通用组件 ---
+// --- Language Data ---
+const content = {
+  zh: {
+    nav: ['玩法介绍', '立即下载'],
+    heroTitle: <>全网 AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">一键召唤</span></>,
+    heroSubtitle: "你的超级搜索外挂",
+    heroDesc: "还在一个一个打开网页搜 AI？太累啦！按一下手指，7大顶尖 AI 瞬间集体出动，为你出谋划策。",
+    downloadBtn: "立即免费下载 (Windows)",
+    communityBtn: "加入吹水群",
+    safetyNote: "纯净脚本，无后台，无病毒，放心冲",
+    sectionTitle: <>懂你的 <span className="text-pink-500">五大招式</span></>,
+    backTitle: "“一旦习惯，就再也回不去”",
+    tags: ['提升效率', '优雅操作', '完全免费', '轻量纯净'],
+    footerBtn: "获取安装包，开启新世界",
+    demoTitle: "全网 AI 瞬间同步",
+    demoStep1: "按住 CapsLock + F",
+    demoStep2: "输入你想问的，敲回车！",
+    demoBadge: "不用选！我全都要！",
+    keys: [
+      {
+        id: 'F',
+        name: '全网 AI 闪电搜',
+        hotkey: 'CapsLock + F',
+        desc: '一次输入，瞬间打开豆包、Kimi、秘塔等 7+ 顶尖 AI。拒绝选择困难，横向对比才是王道。',
+        icon: <Search className="text-pink-500" />,
+        color: 'bg-pink-50',
+        darkColor: 'dark:bg-pink-900/20'
+      },
+      {
+        id: 'S',
+        name: '窗口一键分屏',
+        hotkey: 'CapsLock + S',
+        desc: '写代码时想看文档？一键让当前窗口左/右对齐。别再手动拖窗体了，姿势要优雅。',
+        icon: <Layout className="text-blue-500" />,
+        color: 'bg-blue-50',
+        darkColor: 'dark:bg-blue-900/20'
+      },
+      {
+        id: 'B',
+        name: '批量指令执行',
+        hotkey: 'CapsLock + B',
+        desc: '重复的操作交给机器。一键启动预设的批量任务，让你的电脑像电影黑客一样自动运转。',
+        icon: <Layers className="text-purple-500" />,
+        color: 'bg-purple-50',
+        darkColor: 'dark:bg-purple-900/20'
+      },
+      {
+        id: 'C',
+        name: '偏好快速设置',
+        hotkey: 'CapsLock + Q ',
+        desc: '随时唤起配置面板，微调你的专属快捷键，它会越来越懂你的习惯。',
+        icon: <Settings className="text-orange-500" />,
+        color: 'bg-orange-50',
+        darkColor: 'dark:bg-orange-900/20'
+      },
+      {
+        id: 'Esc',
+        name: '面板闪电退出',
+        hotkey: 'Esc',
+        desc: '优雅地来，优雅地走。不管开了多少辅助窗口，按一下，世界立刻恢复清净。',
+        icon: <XCircle className="text-rose-500" />,
+        color: 'bg-rose-50',
+        darkColor: 'dark:bg-rose-900/20'
+      }
+    ]
+  },
+  en: {
+    nav: ['Features', 'Download'],
+    heroTitle: <>Summon All AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">In One Click</span></>,
+    heroSubtitle: "Your Ultimate Search Power-up",
+    heroDesc: "Tired of searching AI models one by one? Press a key, and 7+ top AI models will launch instantly to solve your problems.",
+    downloadBtn: "Download for Free (Windows)",
+    communityBtn: "Join Community",
+    safetyNote: "Pure script, no background process, virus-free, safe to use",
+    sectionTitle: <>The <span className="text-pink-500">Big 5 Features</span></>,
+    backTitle: "Once you use it, you'll never go back",
+    tags: ['Fast', 'Elegant', 'Free', 'Clean'],
+    footerBtn: "Get Installer & Start Now",
+    demoTitle: "Instant AI Sync",
+    demoStep1: "Hold CapsLock + F",
+    demoStep2: "Type & Hit Enter!",
+    demoBadge: "Compare all at once",
+    keys: [
+      {
+        id: 'F',
+        name: 'AI Multi-Search',
+        hotkey: 'CapsLock + F',
+        desc: 'One input, instantly open Doubao, Kimi, Metaso, and 7+ top AI search pages. No more hesitation.',
+        icon: <Search className="text-pink-500" />,
+        color: 'bg-pink-50',
+        darkColor: 'dark:bg-pink-900/20'
+      },
+      {
+        id: 'S',
+        name: 'Smart Split Screen',
+        hotkey: 'CapsLock + S',
+        desc: 'Align windows left/right instantly. Stop dragging windows manually; keep it professional.',
+        icon: <Layout className="text-blue-500" />,
+        color: 'bg-blue-50',
+        darkColor: 'dark:bg-blue-900/20'
+      },
+      {
+        id: 'B',
+        name: 'Batch Command',
+        hotkey: 'CapsLock + B',
+        desc: 'Leave repetitive tasks to the machine. Launch preset batch tasks with one single click.',
+        icon: <Layers className="text-purple-500" />,
+        color: 'bg-purple-50',
+        darkColor: 'dark:bg-purple-900/20'
+      },
+      {
+        id: 'C',
+        name: 'Quick Config',
+        hotkey: 'CapsLock + C',
+        desc: 'Summon the config panel anytime to fine-tune your exclusive hotkeys and habits.',
+        icon: <Settings className="text-orange-500" />,
+        color: 'bg-orange-50',
+        darkColor: 'dark:bg-orange-900/20'
+      },
+      {
+        id: 'Esc',
+        name: 'Lightning Exit',
+        hotkey: 'CapsLock + Esc',
+        desc: 'Close all helper panels instantly. One key to restore your clean desktop workspace.',
+        icon: <XCircle className="text-rose-500" />,
+        color: 'bg-rose-50',
+        darkColor: 'dark:bg-rose-900/20'
+      }
+    ]
+  }
+};
+
+const aiModels = [
+    { name: '豆包', color: 'bg-blue-400' },
+    { name: 'Kimi', color: 'bg-stone-700' },
+    { name: '元宝', color: 'bg-orange-400' },
+    { name: '文心', color: 'bg-blue-600' },
+    { name: '通义', color: 'bg-purple-500' },
+    { name: '秘塔', color: 'bg-teal-500' },
+    { name: '智谱', color: 'bg-indigo-500' }
+];
+
+// --- Components ---
 const Button = ({ children, variant = 'primary', className = '', ...props }) => {
   const baseStyles = "px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-95 text-lg";
   const variants = {
     primary: "bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600",
     secondary: "bg-indigo-600 text-white hover:bg-indigo-700",
-    outline: "bg-white text-gray-700 border-2 border-gray-100 hover:border-pink-200 hover:bg-pink-50"
+    outline: "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-2 border-gray-100 dark:border-gray-700 hover:border-pink-200 dark:hover:border-pink-800"
   };
   
   return (
@@ -34,199 +180,219 @@ const Button = ({ children, variant = 'primary', className = '', ...props }) => 
 
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [lang, setLang] = useState('zh');
+  const t = content[lang];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setDarkMode(true);
+    }
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const aiModels = [
-    { name: '豆包', color: 'bg-blue-400', desc: '超亲切的超能力' },
-    { name: 'Kimi', color: 'bg-stone-700', desc: '读长文章超厉害' },
-    { name: '元宝', color: 'bg-orange-400', desc: '腾讯家的高才生' },
-    { name: '文心', color: 'bg-blue-600', desc: '知识面超级广' },
-    { name: '通义', color: 'bg-purple-500', desc: '聪明的小助手' },
-    { name: '秘塔', color: 'bg-teal-500', desc: '专业搜索不废话' },
-    { name: '智谱', color: 'bg-indigo-500', desc: '清华学霸基因' }
-  ];
-
   return (
-    <div className="min-h-screen bg-[#FFFDFE] font-sans text-gray-800 selection:bg-pink-100">
-      {/* 顶部导航 */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-white/80 backdrop-blur-xl shadow-sm h-16' : 'bg-transparent h-20'}`}>
-        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg shadow-pink-200">
-              <Zap className="text-white w-6 h-6 fill-current" />
+    <div className={`${darkMode ? 'dark' : ''}`}>
+      <div className="min-h-screen bg-[#FFFDFE] dark:bg-gray-950 font-sans text-gray-800 dark:text-gray-200 transition-colors duration-500">
+        
+        {/* Navigation */}
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl shadow-sm h-16' : 'bg-transparent h-20'}`}>
+          <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg shadow-pink-200 dark:shadow-none">
+                <Zap className="text-white w-6 h-6 fill-current" />
+              </div>
+              <span className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-indigo-600">
+                CursorHelper
+              </span>
             </div>
-            <span className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-indigo-600">
-              Cursor助手
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#how" className="text-sm font-bold text-gray-500 hover:text-pink-500 transition-colors">怎么玩？</a>
-            <Button variant="primary" className="py-2 px-6 text-sm">点击下载</Button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero 介绍区 */}
-      <section className="pt-32 pb-20 px-6 text-center">
-        <div className="max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-pink-50 text-pink-600 text-sm font-extrabold mb-8 animate-bounce">
-            <Sparkles size={16} />
-            <span>不用选！我全都要！</span>
-          </div>
-          <h1 className="text-5xl lg:text-7xl font-black tracking-tight mb-8 leading-[1.1]">
-            全网 AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">一键召唤</span> <br />
-            你的超级搜索外挂
-          </h1>
-          <p className="text-xl text-gray-500 mb-10 leading-relaxed font-medium">
-            还在一个一个打开网页搜 AI？太累啦！<br />
-            按一下手指，7大顶尖 AI 瞬间集体出动，为你出谋划策。
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button variant="primary">
-              <Download size={20} /> 立即免费下载 (Windows)
-            </Button>
-            <Button variant="outline">
-              <MessageCircle size={20} /> 加入吹水群
-            </Button>
-          </div>
-          <p className="mt-6 text-xs text-gray-400 flex items-center justify-center gap-2">
-            <ShieldCheck size={14} /> 纯净脚本，无后台，无病毒，放心冲
-          </p>
-        </div>
-      </section>
-
-      {/* 动画演示区 */}
-      <section id="how" className="py-20 bg-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
             
-            {/* 左侧说明 */}
-            <div className="space-y-8 text-left">
-              <div className="space-y-4">
-                <h2 className="text-4xl font-black text-gray-900 leading-tight">
-                  像“开挂”一样简单 <br />
-                  只需 <span className="text-pink-500">两步</span>
+            <div className="flex items-center gap-4 md:gap-8">
+              <button onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors flex items-center gap-1">
+                <Languages size={20} className="text-gray-500" />
+                <span className="text-xs font-bold text-gray-400 uppercase">{lang === 'zh' ? 'EN' : '中文'}</span>
+              </button>
+              <button onClick={() => setDarkMode(!darkMode)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                {darkMode ? <Sun className="text-yellow-400" /> : <Moon className="text-indigo-600" />}
+              </button>
+              <Button variant="primary" className="hidden md:flex py-2 px-6 text-sm">
+                {t.nav[1]}
+              </Button>
+            </div>
+          </div>
+        </nav>
+
+        {/* Hero Section */}
+        <section className="pt-32 pb-16 px-6 text-center">
+          <div className="max-w-4xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 text-sm font-extrabold mb-8 animate-bounce">
+              <Sparkles size={16} />
+              <span>{t.demoBadge}</span>
+            </div>
+            <h1 className="text-5xl lg:text-7xl font-black tracking-tight mb-4 leading-[1.1]">
+              {t.heroTitle} <br />
+              {t.heroSubtitle}
+            </h1>
+            <p className="text-xl text-gray-500 dark:text-gray-400 mb-10 leading-relaxed font-medium">
+              {t.heroDesc}
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button variant="primary">
+                <Download size={20} /> {t.downloadBtn}
+              </Button>
+              <Button variant="outline">
+                <MessageCircle size={20} /> {t.communityBtn}
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* The Graphic Search Demo Section - RESTORED & IMPROVED */}
+        <section className="py-20 bg-white dark:bg-gray-900 transition-colors duration-500 relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              
+              <div className="space-y-8 text-left">
+                <h2 className="text-4xl font-black leading-tight">
+                  {t.demoTitle} <br />
+                  <span className="text-pink-500 font-black tracking-widest">{lang === 'zh' ? '瞬间引爆' : 'INSTANT HIT'}</span>
                 </h2>
                 <div className="space-y-6 pt-4">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black shrink-0">1</div>
+                    <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black shrink-0">1</div>
                     <div>
-                      <h4 className="text-lg font-bold">按住 CapsLock + F</h4>
-                      <p className="text-gray-500">不用管那个大小写灯，长按就对了！</p>
+                      <h4 className="text-lg font-bold">{t.demoStep1}</h4>
+                      <p className="text-gray-500 dark:text-gray-400">{lang === 'zh' ? '不用管大小写灯，长按就对了！' : 'Forget the Caps light, just hold it!'}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center font-black shrink-0">2</div>
+                    <div className="w-10 h-10 rounded-2xl bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 flex items-center justify-center font-black shrink-0">2</div>
                     <div>
-                      <h4 className="text-lg font-bold">输入你想问的，敲回车！</h4>
-                      <p className="text-gray-500">哪怕是“今天中午吃什么”，都能让 7 个 AI 帮你选。</p>
+                      <h4 className="text-lg font-bold">{t.demoStep2}</h4>
+                      <p className="text-gray-500 dark:text-gray-400">{lang === 'zh' ? '哪怕是查午饭，都能让 7 个 AI 帮你选。' : 'Even for lunch ideas, let 7 AIs decide.'}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 bg-gradient-to-br from-indigo-50 to-pink-50 rounded-[2rem] border border-white">
-                <h4 className="text-sm font-black text-indigo-900 mb-2 flex items-center gap-2">
-                  <Heart className="fill-current text-pink-500" size={16} /> 为什么一定要用它？
-                </h4>
-                <ul className="text-sm text-indigo-800/70 space-y-2 font-medium">
-                  <li>• 豆包最新，Kimi 最懂，通义最快...</li>
-                  <li>• 以前要开 7 次网页，现在只需 1 秒钟。</li>
-                  <li>• 找资料、写作业、查攻略，效率直接起飞！</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* 右侧模拟器 */}
-            <div className="relative">
-              <div className="absolute -inset-10 bg-gradient-to-tr from-pink-500/20 to-indigo-500/20 blur-[100px] rounded-full"></div>
-              <div className="relative bg-gray-900 rounded-[3rem] p-3 shadow-2xl border-4 border-white shadow-pink-100">
-                <div className="h-[450px] w-full bg-[#0d1117] rounded-[2.5rem] relative overflow-hidden flex flex-col">
-                   {/* 模拟浏览器头部 */}
-                   <div className="px-6 py-4 border-b border-white/5 bg-white/5 flex items-center gap-3">
-                      <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
-                      </div>
-                      <div className="bg-white/10 px-4 py-1.5 rounded-full text-[10px] text-gray-400 font-mono flex-1 text-center">
-                        AI_SUPER_SEARCH.exe
-                      </div>
-                   </div>
-
-                   {/* 搜索框弹出 */}
-                   <div className="p-8">
-                      <div className="w-full bg-indigo-600/20 border-2 border-indigo-400 rounded-2xl p-4 flex items-center gap-4 animate-fade-in shadow-[0_0_30px_rgba(129,140,248,0.3)]">
-                        <Search className="text-indigo-400" />
-                        <span className="text-white font-bold text-lg animate-typing overflow-hidden whitespace-nowrap border-r-2 border-white">
-                          如何评价《黑神话：悟空》？
-                        </span>
-                      </div>
-                   </div>
-
-                   {/* 窗口弹出的视觉效果 */}
-                   <div className="relative flex-1 px-8">
-                      {aiModels.map((ai, i) => (
-                        <div 
-                          key={ai.name}
-                          style={{ 
-                            left: `${20 + i * 20}px`, 
-                            top: `${10 + i * 20}px`,
-                            animationDelay: `${i * 0.15}s`
-                          }}
-                          className={`absolute w-40 h-28 ${ai.color} rounded-2xl border-2 border-white/20 shadow-2xl animate-cascade flex flex-col overflow-hidden`}
-                        >
-                          <div className="px-3 py-2 bg-black/20 flex justify-between items-center">
-                            <span className="text-[10px] text-white font-black">{ai.name}</span>
-                            <ExternalLink size={10} className="text-white/50" />
-                          </div>
-                          <div className="p-3">
-                            <div className="h-2 w-full bg-white/40 rounded-full mb-2"></div>
-                            <div className="h-2 w-2/3 bg-white/20 rounded-full"></div>
-                            <div className="mt-3 text-[8px] text-white/80 font-bold">{ai.desc}</div>
-                          </div>
+              <div className="relative">
+                <div className="absolute -inset-10 bg-gradient-to-tr from-pink-500/20 to-indigo-500/20 blur-[100px] rounded-full"></div>
+                <div className="relative bg-gray-900 rounded-[3rem] p-3 shadow-2xl border-4 border-white dark:border-gray-800 shadow-pink-100 dark:shadow-none">
+                  <div className="h-[400px] w-full bg-[#0d1117] rounded-[2.5rem] relative overflow-hidden flex flex-col">
+                    <div className="px-6 py-4 border-b border-white/5 bg-white/5 flex items-center gap-3">
+                        <div className="flex gap-1.5">
+                          <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                          <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                          <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
                         </div>
-                      ))}
-                   </div>
+                        <div className="bg-white/10 px-4 py-1.5 rounded-full text-[10px] text-gray-400 font-mono flex-1 text-center">
+                          AI_SUPER_SEARCH.exe
+                        </div>
+                    </div>
 
-                   {/* 底部提示 */}
-                   <div className="mt-auto p-4 text-center bg-indigo-500/10">
-                      <p className="text-[10px] text-indigo-300 font-black tracking-widest uppercase">
-                        🚀 7台引擎已全部就绪
-                      </p>
-                   </div>
+                    <div className="p-6">
+                        <div className="w-full bg-indigo-600/20 border-2 border-indigo-400 rounded-2xl p-4 flex items-center gap-4 animate-fade-in shadow-[0_0_30px_rgba(129,140,248,0.3)]">
+                          <Search className="text-indigo-400" />
+                          <span className="text-white font-bold text-lg animate-typing overflow-hidden whitespace-nowrap border-r-2 border-white">
+                            {lang === 'zh' ? 'React 并发渲染原理' : 'React Concurrent Mode'}
+                          </span>
+                        </div>
+                    </div>
+
+                    <div className="relative flex-1 px-8">
+                        {aiModels.map((ai, i) => (
+                          <div 
+                            key={ai.name}
+                            style={{ 
+                              left: `${20 + i * 20}px`, 
+                              top: `${10 + i * 20}px`,
+                              animationDelay: `${i * 0.15}s`
+                            }}
+                            className={`absolute w-36 h-24 ${ai.color} rounded-2xl border-2 border-white/20 shadow-2xl animate-cascade flex flex-col overflow-hidden`}
+                          >
+                            <div className="px-3 py-1.5 bg-black/20 flex justify-between items-center">
+                              <span className="text-[9px] text-white font-black">{ai.name}</span>
+                              <ExternalLink size={8} className="text-white/50" />
+                            </div>
+                            <div className="p-3">
+                              <div className="h-1.5 w-full bg-white/30 rounded-full mb-1"></div>
+                              <div className="h-1.5 w-2/3 bg-white/10 rounded-full"></div>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* Features Block Grid */}
+        <section className="py-20 px-6">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-black text-center mb-16">{t.sectionTitle}</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {t.keys.map((key) => (
+                <div key={key.id} className="group p-8 bg-white dark:bg-gray-900 rounded-[2.5rem] border-2 border-transparent hover:border-pink-200 dark:hover:border-pink-900 transition-all duration-500 shadow-sm hover:shadow-2xl hover:-translate-y-2">
+                  <div className={`w-14 h-14 ${key.color} ${key.darkColor} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                    {key.icon}
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xl font-black">{key.name}</h3>
+                    <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-[10px] rounded font-bold text-gray-400">{key.hotkey}</kbd>
+                  </div>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed font-medium">
+                    {key.desc}
+                  </p>
+                </div>
+              ))}
+              <div className="lg:col-span-1 p-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-[2.5rem] flex flex-col justify-center text-white relative overflow-hidden shadow-xl">
+                <div className="relative z-10">
+                  <h3 className="text-2xl font-black mb-4">{lang === 'zh' ? '更懂你的助手' : 'Smarter Assistant'}</h3>
+                  <div className="space-y-2 opacity-80">
+                    <div className="h-2 w-full bg-white/20 rounded-full"></div>
+                    <div className="h-2 w-3/4 bg-white/20 rounded-full"></div>
+                    <div className="h-2 w-1/2 bg-white/20 rounded-full"></div>
+                  </div>
+                </div>
+                <div className="absolute -right-8 -bottom-8 opacity-20">
+                    <Rocket size={160} className="rotate-12" />
                 </div>
               </div>
             </div>
-
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 底部安利 */}
-      <section className="py-20 text-center px-6">
-        <div className="max-w-2xl mx-auto space-y-8">
-          <h2 className="text-3xl font-black italic">“用过就再也回不去的功能”</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {['不用钱', '没广告', '体积小', '超安全'].map(tag => (
-              <div key={tag} className="py-3 px-4 bg-white border-2 border-pink-50 rounded-2xl text-pink-500 font-bold shadow-sm">
-                #{tag}
-              </div>
-            ))}
+        {/* Footer Catch */}
+        <section className="py-24 text-center px-6 bg-gray-50 dark:bg-gray-900 transition-colors duration-500">
+          <div className="max-w-3xl mx-auto space-y-10">
+            <h2 className="text-4xl font-black italic tracking-tight">“{t.backTitle}”</h2>
+            <div className="flex flex-wrap justify-center gap-4">
+              {t.tags.map(tag => (
+                <div key={tag} className="py-3 px-6 bg-white dark:bg-gray-800 border-2 border-pink-50 dark:border-pink-900/30 rounded-2xl text-pink-500 dark:text-pink-400 font-bold shadow-sm">
+                  #{tag}
+                </div>
+              ))}
+            </div>
+            <div className="pt-8">
+              <Button variant="primary" className="mx-auto w-full max-w-md py-6 text-xl">
+                 {t.footerBtn} <ArrowRight />
+              </Button>
+            </div>
           </div>
-          <div className="pt-8">
-            <Button variant="primary" className="mx-auto w-full max-w-sm py-5 text-xl">
-               获取安装包，开启新世界 <ArrowRight />
-            </Button>
-          </div>
-        </div>
-      </section>
+        </section>
 
+        {/* Simple Footer */}
+        <footer className="py-12 border-t border-gray-100 dark:border-gray-900 text-center text-gray-400 text-xs font-bold tracking-widest uppercase">
+          CursorHelper © 2024 • Built with Love & AHK
+        </footer>
+
+      </div>
+      
       <style>{`
         @keyframes cascade {
           0% { opacity: 0; transform: scale(0.5) translateY(40px) rotate(-10deg); }
@@ -237,8 +403,8 @@ export default function App() {
           to { width: 100% }
         }
         @keyframes fade-in {
-          from { opacity: 0; transform: scale(0.9); }
-          to { opacity: 1; transform: scale(1); }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
         .animate-cascade {
           animation: cascade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -247,7 +413,7 @@ export default function App() {
           animation: typing 1.5s steps(25, end) infinite;
         }
         .animate-fade-in {
-          animation: fade-in 0.3s ease-out forwards;
+          animation: fade-in 0.6s ease-out forwards;
         }
       `}</style>
     </div>
