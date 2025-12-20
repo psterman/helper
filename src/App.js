@@ -5,12 +5,6 @@ import {
   Settings, XCircle, Languages, Rocket
 } from 'lucide-react';
 
-/**
- * 故障诊断：
- * 1. 为什么不能切换？因为 Tailwind 默认不监听 .dark 类名。
- * 2. 解决方案：在 HTML 中注入 tailwind.config = { darkMode: 'class' }。
- * 3. 本脚本已增强了对 DOM 的直接控制。
- */
 
 const content = {
   zh: {
